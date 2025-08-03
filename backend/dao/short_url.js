@@ -11,3 +11,11 @@ export const saveShortUrl = async (short_url, long_url, userId) => {
   }
   await newUrl.save();
 };
+
+export const getShortUrl = async (id) => {
+  try {
+    return await shortUrl.findOne({ short_url: id });
+  } catch (error) {
+    console.log("Error finding shorturl", error.message);
+  }
+};

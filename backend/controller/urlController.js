@@ -1,4 +1,4 @@
-import shortUrl from "../models/shorturlModel.js";
+import { getShortUrl } from "../dao/short_url.js";
 import { createShortUrlWithoutUserService } from "../services/shortUrlServices.js";
 
 const createUrl = async (req, res) => {
@@ -15,7 +15,7 @@ const createUrl = async (req, res) => {
 const redirectUrl = async (req, res) => {
   try {
     const { id } = req.params;
-    const url = await shortUrl.findOne({ short_url: id });
+    const url = await getShortUrl(id);
     if (url) {
       res.redirect(url.full_url);
     } else {
