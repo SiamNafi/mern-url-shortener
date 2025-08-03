@@ -8,8 +8,8 @@ function createError(message, statusCode) {
 }
 
 function errorHandler(err, req, res, next) {
-  const statusCode = err.statusCode || 500;
-  const status = err.status || "error";
+  const statusCode = err?.statusCode ? err.statusCode : 500;
+  const status = err?.status || "error";
   console.log("Error Details------->:", err);
   res.status(statusCode).json({
     status,

@@ -1,5 +1,4 @@
 import { saveShortUrl } from "../dao/short_url.js";
-import { createError } from "../utils/errorHandler.js";
 import { generateNanoId } from "../utils/helper.js";
 
 export const createShortUrlWithoutUserService = async (url) => {
