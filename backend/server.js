@@ -6,6 +6,7 @@ import "dotenv/config";
 import connect from "./config/db.js";
 const port = process.env.PORT || 5000;
 import urlRouter from "./routes/shortUrlRoutes.js";
+import { createError, errorHandler } from "./utils/errorHandler.js";
 import { redirectUrl } from "./controller/urlController.js";
 const app = express();
 
@@ -19,6 +20,8 @@ connect();
 //routes
 app.use("/api/url", urlRouter);
 app.get("/:id", redirectUrl);
+
+app.use(errorHandler);
 
 app.listen(port, () => {
   console.log(`server is running on: ${port}`);

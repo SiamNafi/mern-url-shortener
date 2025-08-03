@@ -1,5 +1,5 @@
 import express from "express";
-import { createUrl, redirectUrl } from "../controller/urlController.js";
+import { createUrl } from "../controller/urlController.js";
 
 const urlRouter = express.Router();
 

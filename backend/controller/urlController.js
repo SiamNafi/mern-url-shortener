@@ -1,29 +1,28 @@
 import { getShortUrl } from "../dao/short_url.js";
 import { createShortUrlWithoutUserService } from "../services/shortUrlServices.js";
+import { createError } from "../utils/errorHandler.js";
 
-const createUrl = async (req, res) => {
+const createUrl = async (req, res, next) => {
   try {
     const { url } = req.body;
     const shortUrl = await createShortUrlWithoutUserService(url);
     res.send(process.env.APP_URL + shortUrl);
   } catch (error) {
-    res.json({ success: false, message: error.message });
+    next(error);
   }
 };
 
 // redirect user to shorturl
-const redirectUrl = async (req, res) => {
+const redirectUrl = async (req, res, next) => {
   try {
     const { id } = req.params;
     const url = await getShortUrl(id);
-    if (url) {
-      res.redirect(url.full_url);
-    } else {
-      res.status(404).send("Not Found");
+    if (!url) {
+      return next(createError("short URL not found", 404));
     }
+    res.redirect(url.full_url);
   } catch (error) {
-    console.log("Error in redirect controller", error.message);
-    res.json({ success: false, message: error.message });
+    next(error);
   }
 };
 
