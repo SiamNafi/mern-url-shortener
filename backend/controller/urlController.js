@@ -1,11 +1,24 @@
 import { getShortUrl } from "../dao/short_url.js";
-import { createShortUrlWithoutUserService } from "../services/shortUrlServices.js";
+import {
+  createShortUrlWithoutUserService,
+  createShortUrlWithUserService,
+} from "../services/shortUrlServices.js";
 import { createError } from "../utils/errorHandler.js";
 import { controllerWrapper } from "../utils/tryCatchWrapper.js";
 
 const createUrl = controllerWrapper(async (req, res, next) => {
-  const { url } = req.body;
-  const shortUrl = await createShortUrlWithoutUserService(url);
+  const data = req.body;
+  let shortUrl;
+  if (req.user) {
+    shortUrl = await createShortUrlWithUserService(
+      data.url,
+      req.user._id,
+      data.slug
+    );
+  } else {
+    shortUrl = await createShortUrlWithoutUserService(data.url);
+  }
+
   res.status(200).json({ short_Url: process.env.APP_URL + shortUrl });
 });
 
