@@ -4,11 +4,7 @@ import { createError } from "../utils/errorHandler.js";
 export const saveShortUrl = async (short_url, long_url, userId) => {
   try {
     //check if short url already exist
-    const exist = await shortUrl.findOne({ full_url: long_url });
     const shorturlExist = await shortUrl.findOne({ short_url: short_url });
-    if (exist) {
-      throw createError("URL already exist with that full_url", 400);
-    }
     if (shorturlExist) {
       throw createError("short URL already exist", 400);
     }

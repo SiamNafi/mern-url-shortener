@@ -1,10 +1,10 @@
-import React from "react";
+import HomePage from "./pages/HomePage";
 
 const App = () => {
   return (
-    <div>
-      <p className="text-4xl">hellow</p>
-    </div>
+    <>
+      <HomePage />
+    </>
   );
 };
 
