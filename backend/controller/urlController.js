@@ -6,7 +6,7 @@ import { controllerWrapper } from "../utils/tryCatchWrapper.js";
 const createUrl = controllerWrapper(async (req, res, next) => {
   const { url } = req.body;
   const shortUrl = await createShortUrlWithoutUserService(url);
-  res.send(process.env.APP_URL + shortUrl);
+  res.status(200).json({ short_Url: process.env.APP_URL + shortUrl });
 });
 
 // redirect user to shorturl
