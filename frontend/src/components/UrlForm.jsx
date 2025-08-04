@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { createUrl } from "../utils/shortUrl.utils";
+import { createUrl } from "../api/shortUrl.api";
 
 const UrlForm = () => {
   const [url, setUrl] = useState("");
