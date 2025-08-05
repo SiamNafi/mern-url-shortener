@@ -1,12 +1,15 @@
-import AuthPage from "./pages/AuthPage";
-import HomePage from "./pages/HomePage";
+import { Outlet } from "@tanstack/react-router";
+import Navbar from "./components/Navbar";
 
-const App = () => {
+const RootLayout = () => {
   return (
     <>
-      <AuthPage />
+      <Navbar />
+      <div>
+        <Outlet />
+      </div>
     </>
   );
 };
 
-export default App;
+export default RootLayout;

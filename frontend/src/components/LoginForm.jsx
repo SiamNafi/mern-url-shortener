@@ -1,11 +1,35 @@
 import React, { useState } from "react";
+import { loginUser } from "../api/user.api";
+import { toast } from "react-toastify";
 
-const LoginForm = () => {
+const LoginForm = ({ setLogin }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(email, password);
+    setError("");
+    if (!email || !password) {
+      setError("All fields are required");
+      return;
+    }
+    setLoading(true);
+    try {
+      const data = await loginUser(email, password);
+      if (data.success) {
+        //reset state / and show toast
+        toast.success(data.message);
+        setEmail("");
+        setPassword("");
+      }
+    } catch (error) {
+      console.log(error.message);
+      setError(error.message);
+      toast.error(error.message);
+    } finally {
+      setLoading(false);
+    }
   };
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
@@ -13,6 +37,10 @@ const LoginForm = () => {
         <h2 className="text-2xl font-bold text-gray-800 text-center mb-6">
           Login
         </h2>
+        {/* error message */}
+        {error && (
+          <p className="mb-4 text-red-500 text-center font-medium">{error}</p>
+        )}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label htmlFor="email" className="block text-gray-600 mb-1">
@@ -25,7 +53,6 @@ const LoginForm = () => {
               name="email"
               type="email"
               placeholder="Enter your email"
-              required
               className="w-full px-4 py-2 border rounded-lg focus:ring focus:ring-blue-300 focus:outline-none"
             />
           </div>
@@ -40,19 +67,25 @@ const LoginForm = () => {
               name="password"
               type="password"
               placeholder="Enter your password"
-              required
               className="w-full px-4 py-2 border rounded-lg focus:ring focus:ring-blue-300 focus:outline-none"
             />
           </div>
-          <button className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition">
-            Login
+          <button
+            disabled={loading}
+            className="cursor-pointer w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition"
+          >
+            {loading ? "Logging in...." : "Login"}
           </button>
         </form>
         <p className="text-sm text-center text-gray-600 mt-4">
           Don’t have an account?{" "}
-          <a href="#" className="text-blue-500 hover:underline">
+          <span
+            onClick={() => setLogin(false)}
+            href="#"
+            className="text-blue-500 hover:underline cursor-pointer"
+          >
             Sign up
-          </a>
+          </span>
         </p>
       </div>
     </div>
