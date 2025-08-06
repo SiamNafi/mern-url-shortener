@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { registerUser } from "../api/user.api";
 import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "@tanstack/react-router";
+import { login } from "../store/slice/authSlice.js";
 
 const RegisterForm = ({ setLogin }) => {
   const [name, setName] = useState("");
@@ -8,6 +11,8 @@ const RegisterForm = ({ setLogin }) => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,14 +28,9 @@ const RegisterForm = ({ setLogin }) => {
     setLoading(true);
     try {
       const data = await registerUser(name, email, password);
-      console.log(data);
-      if (data.success) {
-        // reset state / and show toast
-        toast.success(data.message);
-        setName("");
-        setEmail("");
-        setPassword("");
-      }
+      toast.success(data.message);
+      dispatch(login(data.user));
+      navigate({ to: "/dashboard" });
     } catch (error) {
       console.log(error.message);
       setError(error.message);

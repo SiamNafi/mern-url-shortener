@@ -5,20 +5,35 @@ import { cookieOptions } from "../config/config.js";
 //register user
 const register = controllerWrapper(async (req, res) => {
   const { name, email, password } = req.body;
-  const token = await registerUser(name, email, password);
+  const { token, newUser } = await registerUser(name, email, password);
+  const { password: _, ...safeuser } = newUser.toObject()
+    ? newUser.toObject()
+    : newUser;
   res.cookie("accessToken", token, cookieOptions);
-  res
-    .status(200)
-    .json({ success: true, message: "User registered successfully" });
+  res.status(200).json({
+    user: safeuser,
+    success: true,
+    message: "User registered successfully",
+  });
 });
 
 // login a user
 const login = controllerWrapper(async (req, res) => {
   const { email, password } = req.body;
   const { token, user } = await loginUser(email, password);
-  req.user = user;
+  const { password: _, ...safeuser } = user.toObject() ? user.toObject() : user;
+  req.user = safeuser;
   res.cookie("accessToken", token, cookieOptions);
-  res.status(200).json({ success: true, message: "Login successfull" });
+  res
+    .status(200)
+    .json({ user: safeuser, success: true, message: "Login successfull" });
 });
 
-export { register, login };
+//get current user
+const getCurrentUser = controllerWrapper(async (req, res) => {
+  const user = req.user;
+  const { password: _, ...safeuser } = user.toObject() ? user.toObject() : user;
+  res.status(200).json({ user: safeuser });
+});
+
+export { register, login, getCurrentUser };

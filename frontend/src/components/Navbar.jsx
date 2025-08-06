@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { Link } from "@tanstack/react-router";
+import { useSelector } from "react-redux";
 
 const Navbar = () => {
-  const [user, setUser] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const { user } = useSelector((state) => state.auth);
+  console.log(user);
   const onLogout = async () => {};
 
   return (
@@ -29,12 +31,13 @@ const Navbar = () => {
             ) : (
               <div className="relative">
                 <button
-                  className="w-10 h-10 rounded-full border border-gray-300 flex items-center justify-center bg-gray-100 hover:ring-2 hover:ring-blue-400"
+                  className="w-10 cursor-pointer h-10 rounded-full border border-gray-300 flex items-center justify-center bg-gray-100 hover:ring-2 hover:ring-blue-400"
                   onClick={() => setMenuOpen(!menuOpen)}
                 >
                   <img
-                    src={user.avatar || "https://via.placeholder.com/40"}
+                    src={user.user?.avatar}
                     alt="avatar"
+                    referrerPolicy="no-referrer"
                     className="w-10 h-10 rounded-full object-cover"
                   />
                 </button>
