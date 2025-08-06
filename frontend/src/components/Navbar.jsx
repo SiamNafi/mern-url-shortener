@@ -1,12 +1,25 @@
 import React, { useState } from "react";
-import { Link } from "@tanstack/react-router";
-import { useSelector } from "react-redux";
+import { Link, redirect, useNavigate } from "@tanstack/react-router";
+import { useDispatch, useSelector } from "react-redux";
+import { logoutUser } from "../api/user.api.js";
+import { logout } from "../store/slice/authSlice";
+import { toast } from "react-toastify";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const { user } = useSelector((state) => state.auth);
-  console.log(user);
-  const onLogout = async () => {};
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const onLogout = async () => {
+    try {
+      const data = await logoutUser();
+      dispatch(logout());
+      toast.success("Logged out");
+      navigate({ to: "/auth" });
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
   return (
     <nav className="bg-white border-b w-full top-0 z-50">

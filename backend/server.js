@@ -11,6 +11,7 @@ import authRoutes from "./routes/authRoutes.js";
 import { createError, errorHandler } from "./utils/errorHandler.js";
 import { redirectUrl } from "./controller/urlController.js";
 import { attachUser } from "./utils/attachUser.js";
+import userRoutes from "./routes/userRoutes.js";
 const app = express();
 
 app.use(express.json());
@@ -30,6 +31,7 @@ connect();
 //routes
 app.use("/api/auth", authRoutes);
 app.use("/api/url", urlRouter);
+app.use("/api/user", userRoutes);
 app.get("/:id", redirectUrl);
 
 app.use(errorHandler);

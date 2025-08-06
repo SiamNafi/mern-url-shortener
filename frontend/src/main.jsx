@@ -7,7 +7,7 @@ import { Bounce, ToastContainer } from "react-toastify";
 import "./index.css";
 import store from "./store/store.js";
 
-const queryClient = new QueryClient();
+export const queryClient = new QueryClient();
 const router = createRouter({
   routeTree,
   context: {

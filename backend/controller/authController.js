@@ -36,4 +36,10 @@ const getCurrentUser = controllerWrapper(async (req, res) => {
   res.status(200).json({ user: safeuser });
 });
 
-export { register, login, getCurrentUser };
+//logout a user
+const logoutUser = controllerWrapper(async (req, res) => {
+  res.clearCookie("accessToken", cookieOptions);
+  res.status(200).json({ success: true, message: "Logged out successfully" });
+});
+
+export { register, login, getCurrentUser, logoutUser };
