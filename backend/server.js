@@ -33,6 +33,9 @@ app.use("/api/auth", authRoutes);
 app.use("/api/url", urlRouter);
 app.use("/api/user", userRoutes);
 app.get("/:id", redirectUrl);
+app.get("/", (req, res) => {
+  res.send("Hellooooooooooooooooo");
+});
 
 app.use(errorHandler);
 
