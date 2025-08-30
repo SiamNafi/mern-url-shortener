@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { createUrl } from "../api/shortUrl.api";
 import { useSelector } from "react-redux";
 import { queryClient } from "../main";
+import { toast } from "react-toastify";
 
 const UrlForm = () => {
   const [url, setUrl] = useState("");
@@ -12,14 +13,27 @@ const UrlForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!url.trim()) {
+      toast.info("Please input a URL");
+      return;
+    }
+
     let finalUrl = url.trim();
     if (!finalUrl.startsWith("http://") && !finalUrl.startsWith("https://")) {
       finalUrl = "https://" + finalUrl;
     }
-    const short_Url = await createUrl(finalUrl, customSlug);
-    setShortUrl(short_Url);
-    queryClient.invalidateQueries({ queryKey: ["userUrls"] });
+
+    try {
+      const short_Url = await createUrl(finalUrl, customSlug);
+      setShortUrl(short_Url);
+      queryClient.invalidateQueries({ queryKey: ["userUrls"] });
+    } catch (err) {
+      console.error("Error creating short URL:", err);
+      alert("Failed to create short URL. Please try again.");
+    }
   };
+
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(shortUrl);

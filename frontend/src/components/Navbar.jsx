@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { Link, redirect, useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutUser } from "../api/user.api.js";
-import { logout } from "../store/slice/authSlice";
+import { logout } from "../store/slice/authSlice.js";
 import { toast } from "react-toastify";
+import { queryClient } from "../main.jsx";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -13,7 +14,14 @@ const Navbar = () => {
   const onLogout = async () => {
     try {
       const data = await logoutUser();
+      console.log(data);
+
+      // Clear Redux state
       dispatch(logout());
+
+      // Clear TanStack Query cache so checkAuth won’t reuse stale user
+      queryClient.removeQueries({ queryKey: ["currentUser"] });
+
       toast.success("Logged out");
       navigate({ to: "/auth" });
     } catch (error) {
